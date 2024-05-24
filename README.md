@@ -12,7 +12,7 @@ Note: tap ifconfig on terminal to show the interface of your wifi and after that
 
 ```sh
 
- python3 pppwnwifi.py  --iface=wlan0   
+ python3 pppwnwifi.py  --interface=wlan0 --fw=1100  
 
 ```
 
