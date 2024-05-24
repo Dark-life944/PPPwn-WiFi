@@ -281,14 +281,23 @@ class Exploit:
         # Exploit
         pass
 
-
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('-i', '--iface', required=True, help='Interface')
-    parser.add_argument('-s1', '--stage1', required=True, help='Stage 1')
-    parser.add_argument('-s2', '--stage2', required=True, help='Stage 2')
+    parser.add_argument('--iface', required=True, help='Network interface')
+    parser.add_argument('--stage1', default='stage1.bin')
+    parser.add_argument('--stage2', default='stage2.bin')
+    parser.add_argument('--offsets', default='offsets.py')
+
     args = parser.parse_args()
 
-    exploit = Exploit(OFFSETS, args.iface, args.stage1, args.stage2)
-    exploit.exploit()
+    with open(args.offsets, 'r') as f:
+        offs = eval(f.read())
 
+    with open(args.stage1, 'rb') as f:
+        stage1 = f.read()
+
+    with open(args.stage2, 'rb') as f:
+        stage2 = f.read()
+
+    exploit = Exploit(offs, args.iface, stage1, stage2)
+    exploit.trigger()
