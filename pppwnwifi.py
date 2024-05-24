@@ -283,7 +283,7 @@ class Exploit:
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('--iface', required=True, help='Network interface')
+    parser.add_argument('--iface', required=True)
     parser.add_argument('--stage1', default='stage1.bin')
     parser.add_argument('--stage2', default='stage2.bin')
     parser.add_argument('--offsets', default='offsets.py')
