@@ -282,22 +282,48 @@ class Exploit:
         pass
 
 if __name__ == '__main__':
-    parser = ArgumentParser()
-    parser.add_argument('--iface', required=True)
+    parser = ArgumentParser('pppwnwifi.py')
+    parser.add_argument('--interface', required=True)
+    parser.add_argument('--fw',
+                        choices=[
+                            '750', '751', '755',
+                            '800', '801', '803', '850', '852',
+                            '900', '903', '904', '950', '951', '960',
+                            '1000', '1001', '1050', '1070', '1071',
+                            '1100'
+                        ],
+                        default='1100')
     parser.add_argument('--stage1', default='stage1.bin')
     parser.add_argument('--stage2', default='stage2.bin')
-    parser.add_argument('--offsets', default='offsets.py')
-
     args = parser.parse_args()
 
-    with open(args.offsets, 'r') as f:
-        offs = eval(f.read())
+    print('[+] PPPwn - WiFi...')
+    print('[+] args: ' + ' '.join(f'{k}={v}' for k, v in vars(args).items()))
 
-    with open(args.stage1, 'rb') as f:
+    with open(args.stage1, mode='rb') as f:
         stage1 = f.read()
 
-    with open(args.stage2, 'rb') as f:
+    with open(args.stage2, mode='rb') as f:
         stage2 = f.read()
 
-    exploit = Exploit(offs, args.iface, stage1, stage2)
+    if args.fw in ('750', '751', '755'):
+        offs = OffsetsFirmware_750_755()
+    elif args.fw in ('800', '801', '803'):
+        offs = OffsetsFirmware_800_803()
+    elif args.fw in ('850', '852'):
+        offs = OffsetsFirmware_850_852()
+    elif args.fw == '900':
+        offs = OffsetsFirmware_900()
+    elif args.fw in ('903', '904'):
+        offs = OffsetsFirmware_903_904()
+    elif args.fw in ('950', '951', '960'):
+        offs = OffsetsFirmware_950_960()
+    elif args.fw in ('1000', '1001'):
+        offs = OffsetsFirmware_1000_1001()
+    elif args.fw in ('1050', '1070', '1071'):
+        offs = OffsetsFirmware_1050_1071()
+    elif args.fw == '1100':
+        offs = OffsetsFirmware_1100()
+
+    exploit = Exploit(offs, args.interface, stage1, stage2)
     exploit.trigger()
